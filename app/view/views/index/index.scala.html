@@ -1,0 +1,30 @@
+@(model: view.models.IndexViewModel)
+
+@view.views.html.main.main("Meekbiz") {
+
+<!-- Content starts -->
+<div class="content" ng-controller="IndexCtrl">
+	<div class="container">
+
+		<div class="blog">
+			<div class="row">
+				<div class="col-md-12">
+
+					<!-- Blog Posts -->
+					<div class="row">
+						<div class="col-md-8 col-sm-8">
+							@leftcolumn(model)
+						</div>
+						<div class="col-md-4 col-sm-4">
+							@rightcolumn()
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- Content ends -->
+
+}

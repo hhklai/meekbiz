@@ -1,0 +1,17 @@
+@(model: view.models.ProfileViewModel)
+
+@view.views.html.main.main("Meekbiz") {
+
+    @if(!model.getIsOwner()) {
+        <script type="text/javascript">
+            window.readOnly = true;
+        </script>
+    }
+    <div class="content" ng-controller="ProfileCtrl">
+        <div class="container" ng-cloak>
+            @usersummary(model)
+
+            @mizlistings(model)
+    </div>
+
+}

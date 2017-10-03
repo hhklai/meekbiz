@@ -1,0 +1,41 @@
+@(title: String)
+@import play.api.Play.current
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<!-- Title and other stuffs -->
+<title>@title</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600' rel='stylesheet' type='text/css'>
+
+<!-- Stylesheets -->
+<!-- Bootstrap -->
+<link rel="stylesheet" media="screen" href="@view.controllers.CdnWebJarAssets.getUrl(view.controllers.CdnWebJarAssets.locate("bootstrap.min.css"))" />
+<!-- Font awesome icon -->
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/font-awesome.css")">
+<!-- Navigation menu -->
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/ddlevelsmenu-base.css")">
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/ddlevelsmenu-topbar.css")">
+<!-- cSlider -->
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/slider.css")">
+<!-- PrettyPhoto -->
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/prettyPhoto.css")">
+<!-- ng-img-crop -->
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/thirdparty/ng-img-crop.css")">
+<!-- Custom style -->
+<link rel="stylesheet" href="@controllers.routes.Assets.at("css/style.css")">
+
+<!-- HTML5 Support for IE -->
+<!--[if lt IE 9]>
+	<script src="@controllers.routes.Assets.at("js/html5shim.js")"></script>
+<![endif]-->
+<script src="@controllers.routes.Assets.at("js/tinymce/tinymce.min.js")"></script>
+<!-- Favicon -->
+<link rel="shortcut icon" href="@controllers.routes.Assets.at("img/favicon/favicon.png")">
+
+<script type="text/javascript">
+@Html(org.webjars.RequireJS.getSetupJavaScript(view.controllers.routes.CdnWebJarAssets.at("").url, current.configuration.getString("contentUrl").orNull))
+</script>
+

@@ -1,0 +1,71 @@
+@(model: view.models.ProfileViewModel)
+
+<div ng-controller="ProfileUserSummaryCtrl">
+    <div class="form-panel" ng-class="readOnly ? '' : 'can-edit'">
+        <div style="display:inline-block;vertical-align:top">
+            <div style="margin-top:10px">
+                @if(model.getIsOwner()) {
+                    <photo-input is-editting="isEditting" thumbnail="thumbnail" has-changed="photoHasChanged" aspect-ratio="1" result-size="140"></photo-input>
+                } else {
+                    <img src="@model.getProfileImageLink()" />
+                }
+            </div>
+        </div>
+        <div style="margin-left:30px;display:inline-block">
+            <div ng-hide="isEditting">
+                @if(model.getIsOwner()) {
+                    <h1>{{user.name}}</h1>
+                    <p>Email: {{user.email}}</p>
+                } else {
+                    <h1>@model.getUser().getName()</h1>
+                    <p>@model.getUser().getEmail()</p>
+                }
+
+            </div>
+            <div ng-show="isEditting">
+                <form name="form" novalidate ng-model-options="{ updateOn: 'blur' }">
+                    <div class="form-group" ng-class="{'has-error': form.registerEmail.$invalid && emailBlurred}">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" name="registerEmail"
+                            class="form-control" data-ng-model="user.email"
+                            ng-blur="emailBlurred=true" ng-focus="emailBlurred=false" required ng-maxlength="255"
+                            email-not-taken="originalUser.email"/>
+                        <span class="help-block" ng-show="form.registerEmail.$invalid && emailBlurred">
+                            <span ng-show="form.registerEmail.$error.email">Not a valid email</span>
+                            <span ng-show="form.registerEmail.$error.untaken">
+                                Email is already taken</span>
+                            <span ng-show="form.registerEmail.$error.required && !form.registerEmail.$error.email">
+                                Email is required</span>
+                            <span ng-show="form.registerEmail.$error.maxlength">Email is too long</span>
+                        </span>
+                    </div>
+                    <div class="form-group" ng-class="{'has-error': form.registerName.$invalid && nameBlurred}">
+                        <label for="registerName">Profile Name</label>
+                        <input type="text" id="registerName" name="registerName"
+                            class="form-control" data-ng-model="user.name"
+                            ng-blur="nameBlurred=true" ng-focus="nameBlurred=false" ng-maxlength="255"
+                            ng-pattern="/^[^@@]*$/" name-not-taken="originalUser.name"/>
+                        <span class="help-block" ng-show="form.registerName.$invalid && nameBlurred">
+                            <span ng-show="form.registerName.$error.untaken">
+                                Name is already taken</span>
+                            <span ng-show="form.registerName.$error.maxlength">Name is too long</span>
+                            <span ng-show="form.registerName.$error.pattern">Name cannot contain "@@"</span>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="form-buttons" ng-class="readOnly ? '' : 'can-edit'">
+        <button class="btn btn-info" ng-click="isEditting = !isEditting;">
+            <span ng-hide="isEditting">Edit Profile</span>
+            <span ng-show="isEditting" ng-click="cancel()">Cancel</span>
+        </button>
+
+        <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+        ng-show="isEditting" ng-click="submit()">
+            Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+        </button>
+    </div>
+</div>
+

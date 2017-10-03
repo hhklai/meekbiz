@@ -1,0 +1,17 @@
+@(title: String)(content: Html)
+@import view.views.helper.mainScriptSrc
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        @head(title)
+    </head>
+    <body>
+        @topnav()
+        @header()
+        @content
+        @footer()
+        <script data-main="@controllers.routes.Assets.at(mainScriptSrc(scriptName = "main"))" src="@view.controllers.CdnWebJarAssets.getUrl(view.controllers.CdnWebJarAssets.locate("require.js"))"></script>
+    </body>
+</html>

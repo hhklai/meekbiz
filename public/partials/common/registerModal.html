@@ -1,0 +1,74 @@
+<div class="modal-header">
+    <h3>Register</h3>
+</div>
+<div ng-show="error" class="modal-body bg-warning">An error has occurred.</div>
+<div class="modal-body">
+    <form name="form" novalidate  class="form-horizontal" ng-model-options="{ updateOn: 'blur' }">
+        <div class="form-group" ng-class="{'has-error': form.registerEmail.$invalid && emailBlurred}">
+            <label for="registerEmail" class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-5">
+                <input type="email" id="registerEmail" name="registerEmail"
+                       class="form-control" data-ng-model="user.email"
+                       ng-blur="emailBlurred=true" ng-focus="emailBlurred=false" required ng-maxlength="255"
+                       email-not-taken/>
+            </div>
+            <div class="col-sm-4 help-block" ng-show="form.registerEmail.$invalid && emailBlurred">
+                <div class="help-block-inner" ng-show="form.registerEmail.$error.email">Not a valid email</div>
+                <div class="help-block-inner" ng-show="form.registerEmail.$error.untaken">
+                    Email is already taken</div>
+                <div class="help-block-inner"
+                     ng-show="form.registerEmail.$error.required && !form.registerEmail.$error.email">
+                    Email is required</div>
+                <div class="help-block-inner"
+                     ng-show="form.registerEmail.$error.maxlength">Email is too long</div>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.registerName.$invalid && nameBlurred}">
+            <label for="registerName" class="col-sm-3 control-label">Profile Name</label>
+            <div class="col-sm-5">
+                <input type="text" id="registerName" name="registerName"
+                       class="form-control" data-ng-model="user.name"
+                       ng-blur="nameBlurred=true" ng-focus="nameBlurred=false" ng-maxlength="255"
+                       ng-pattern="/^[^@]*$/" name-not-taken/>
+            </div>
+            <div class="col-sm-4 help-block" ng-hide="form.registerName.$invalid && nameBlurred">
+                <div class="help-block-inner">(Optional)</div>
+            </div>
+            <div class="col-sm-4 help-block" ng-show="form.registerName.$invalid && nameBlurred">
+                <div class="help-block-inner" ng-show="form.registerName.$error.untaken">
+                    Name is already taken</div>
+                <div class="help-block-inner"
+                     ng-show="form.registerName.$error.maxlength">Name is too long</div>
+                <div class="help-block-inner"
+                     ng-show="form.registerName.$error.pattern">Name cannot contain "@"</div>
+            </div>
+            <div class="col-sm-12">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-9" ng-show="!!user.name && !form.registerName.$invalid" style="word-wrap:break-word">
+                    Your profile page will be registered at {{location.protocol() + '://' + location.host() + '/profile/' + (user.name | uriEncode)}}
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.registerPassword.$invalid && passwordBlurred}">
+            <label for="registerPassword" class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-5">
+                <input type="password" class="form-control" id="registerPassword" name="registerPassword"
+                       data-ng-model="user.password" ng-blur="passwordBlurred=true" ng-focus="passwordBlurred=false"
+                       required ng-minlength="8" />
+            </div>
+            <div class="col-sm-4 help-block" ng-show="form.registerPassword.$invalid && passwordBlurred">
+                <div class="help-block-inner">Password requires at least 8 characters</div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+            data-ng-click="form.registerPassword.blur(); form.registerEmail.blur(); form.registerName.blur();
+            form.$invalid ? null :ok(user)">
+        Register <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+    </button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

@@ -1,0 +1,8 @@
+@(user: api.entity.User)
+@import utils.MailUtil
+
+@view.views.html.emails.main.decorated.main() {
+    <p>Hello @user.getName()</p>
+    <p>Thank you for registering on <a href="@MailUtil.absoluteUrl(view.controllers.routes.IndexController.index)">Meekbiz</a>.
+        This email is sent to you to confirm that you have indeed register on the site.</p>
+}

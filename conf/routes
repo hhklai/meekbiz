@@ -1,0 +1,57 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET            /                                            view.controllers.IndexController.index()
+
+# Abuse page
+GET            /abuse                                       view.controllers.MiscPageController.reportAbuse()
+
+# Profile page
+GET            /profile                                     view.controllers.ProfileController.privateProfile()
+GET            /profile/:name                               view.controllers.ProfileController.profile(name: String )
+
+# Service page
+GET            /service/:username/:mizTitle                 view.controllers.MizController.miz(username: String, mizTitle: String, isOwner: Boolean ?= false)
+
+# Admin pages
+GET            /management                                  view.controllers.MiscPageController.adminManagementPage()
+
+# User Controller
+POST           /rest/user                                   api.controllers.UserController.registerUser()
+GET            /rest/user                                   api.controllers.UserController.checkIfUserExists(email: String, name: String)
+GET            /rest/user/self                              api.controllers.UserController.viewPrivateProfile(fields: String)
+PATCH          /rest/user/self                              api.controllers.UserController.updatePrivateProfile()
+POST           /login                                       api.controllers.UserController.login()
+POST           /logout                                      api.controllers.UserController.logout()
+
+# Miz Controller
+POST           /rest/miz                                    api.controllers.MizController.createMiz()
+POST           /rest/miz/:mizTitle                          api.controllers.MizController.updateMiz(mizTitle: String)
+GET            /rest/miz/self/exists/:mizTitle              api.controllers.MizController.checkIfMizExists(mizTitle: String)
+GET            /rest/miz/:username/:mizTitle                api.controllers.MizController.getPrivateMiz(username: String, mizTitle: String)
+DELETE         /rest/miz/:username/:title                   api.controllers.MizController.deleteMizThatHasNeverBeenActivated(username: String, title: String)
+GET            /rest/miz                                    api.controllers.MizController.getPendingMizes()
+POST           /rest/miz/:mizTitle/desc/img                 api.controllers.MizController.requestS3Ids(mizTitle: String)
+
+# Management Endpoints
+PUT            /rest/management/search/reconnect            api.controllers.SearchController.reInitSearch()
+PUT            /rest/management/search/index/rebuild        api.controllers.SearchController.rebuildSearchIndex()
+PUT            /rest/management/search/index/refresh        api.controllers.SearchController.synchSearchIndexWithNewMizes()
+
+### Enable www.WebJars.org based resources to be returned
+GET            /webjars/*file                               view.controllers.CdnWebJarAssets.at(file)
+# Map static resources from the /public folder to the /assets URL path
+GET            /assets/*file                                controllers.Assets.at(path="/public", file)
+
+### to allow cross domain post (needed for http to https access)
+OPTIONS        /*path                                       view.controllers.Application.checkPreFlight(path)
+
+# jsRoutes
+GET            /jsroutes.js                                 view.controllers.Application.jsRoutes()
+
+POST           /rest/s3file                                 api.controllers.S3Controller.createS3FileMetaData()
+PUT            /rest/s3file                                 api.controllers.S3Controller.updateS3FileMetaData(id: String)
+DELETE         /rest/s3file                                 api.controllers.S3Controller.deleteS3FileMetaData(id: String)
+

@@ -1,0 +1,28 @@
+@(model: view.models.IndexViewModel)
+@import play.api.Play.current
+
+<div class="posts">
+    @for(miz <- model.getMizes()) {
+
+        <div class="entry">
+                <!-- Thumbnail -->
+            <div class="bthumb2">
+                <a href="@view.controllers.routes.MizController.miz(miz.getLeft(), miz.getRight().title).url">
+                    <img src="@( if (miz.getRight().thumbnail ==  null) "/assets/img/miz/round_question_mark.jpg" else current.configuration.getString("aws.s3.host").get + miz.getRight().thumbnail + ".jpg")" alt="" class="img-responsive"/>
+                </a>
+            </div>
+            <h4>@miz.getRight().title</h4>
+            <p>@miz.getRight().summary</p>
+            <a href="@view.controllers.routes.MizController.miz(miz.getLeft(), miz.getRight().title).url" class="btn btn-info">View</a>
+            <div class="clearfix"></div>
+        </div>
+    }
+
+	<!-- Pagination -->
+	<div class="paging">
+		<span class='current'>1</span> <a href='#'>2</a> <span
+			class="dots">&hellip;</span> <a href='#'>6</a> <a href="">Next</a>
+	</div>
+
+	<div class="clearfix"></div>
+</div>

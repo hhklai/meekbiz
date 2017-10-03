@@ -1,0 +1,152 @@
+<div ng-switch="page">
+    <div ng-switch-when="1">
+        <div class="modal-header"><h3>Create a new service</h3></div>
+        <div ng-show="error" class="modal-body bg-warning">An error occurred.  Service was not created.  Try again later.</div>
+        <form name="form" novalidate class="form-horizontal" ng-model-options="{ updateOn: 'blur' }">
+            <div class="modal-body">
+                <div class="form-group" ng-class="{'has-error': form.title.$invalid && titleBlurred}">
+                    <label for="title" class="col-sm-2 control-label">
+                        Title
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" id="title" name="title" class="form-control" ng-model="miz.title"
+                               placeholder="Example: Authentic Italian Cuisine"
+                               ng-blur="titleBlurred=true" ng-focus="titleBlurred=false"
+                               required ng-maxlength="255"
+                               miz-title-not-taken />
+                    </div>
+                    <div class="col-sm-4 help-block" ng-show="form.title.$invalid && titleBlurred">
+                        <div class="help-block-inner" ng-show="form.title.$error.untaken">
+                            Title is already taken</div>
+                        <div class="help-block-inner"
+                             ng-show="form.title.$error.required">Title is required</div>
+                        <div class="help-block-inner"
+                             ng-show="form.title.$error.maxlength">Title must be less than 255 characters</div>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error': form.description.$invalid && descBlurred}">
+                    <label for="description" class="col-sm-2 control-label">
+                        Brief Description
+                    </label>
+                    <div class="col-sm-6">
+                        <textarea style="resize:none" id="description" name="description" class="form-control" ng-model-options="{ updateOn: 'keydown blur'}" ng-model="miz.summary"
+                                  placeholder="A summary of what you will do as a service.&#10;What makes it unique?  Is it unique because of your experience, the venue, a new idea, or simply an irresistible price?&#10;Please write in third person.&#10;Anything you can't fit here can be put in details on the next section."
+                                  ng-blur="descBlurred=true" ng-focus="descBlurred=false"
+                                  rows="8"
+                                  required ng-maxlength="1000">
+                        </textarea>
+                        <p ng-show="!!miz.summary">{{miz.summary.length}} / 1000 characters</p>
+                    </div>
+
+                    <div class="col-sm-4 help-block" ng-show="form.description.$invalid && descBlurred">
+                        <div class="help-block-inner"
+                             ng-show="form.description.$error.required">Description is required</div>
+                        <div class="help-block-inner"
+                             ng-show="form.description.$error.maxlength">Description must be less than 1000 characters</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" style="float:left;" ng-show="!mizCreated" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-warning" style="float:left;" ng-show="!!mizCreated" ng-click="discard()">Discard</button>
+                <button class="btn btn-success" ng-show="!!mizCreated" ng-click="done()">Save</button>
+                <button class="btn btn-info" ng-show="page > 1" ng-click="back()">&lt;&lt; Back</button>
+                <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}" ng-init="miz.locationRegion = 'Calgary'"
+                        ng-click="form.title.blur(); form.description.blur(); (form.$invalid && !mizCreated) ? null : createMiz(miz)">
+                    Next &gt;&gt;<span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </div>
+        </form>
+    </div>
+    <div ng-switch-when="2">
+        <div class="modal-header"><h3>Upload a logo / service thumbnail</h3></div>
+        <div ng-controller="MizSummaryCtrl">
+            <form name="form" novalidate ng-model-options="{ updateOn: 'blur' }">
+                <div class="modal-body">
+                    <div style="display:inline-block">
+                        <photo-input is-editting="true" thumbnail="thumbnail" has-changed="photoHasChanged" aspect-ratio="1" result-size="140"></photo-input>
+                    </div>
+                    <div style="display:inline-block">
+                        Include a logo / picture to represent your company / service.  This is the picture that will show up in search results.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" style="float:left;" ng-click="discard()">Discard</button>
+                    <button class="btn btn-success" ng-click="done()">Save</button>
+                    <button class="btn btn-info" ng-show="page > 1" ng-click="back()">&lt;&lt; Back</button>
+                    <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+                            ng-click="submit(); next();">
+                        Next &gt;&gt;<span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div ng-switch-when="3">
+        <div class="modal-header"><h3>Upload a banner image</h3></div>
+        <div ng-controller="MizBannerCtrl">
+            <div class="modal-body">
+                <p>Show your service in action.  Add a picture to the top of your page on Meekbiz.</p>
+                <photo-input is-editting="true" thumbnail="bannerPic" has-changed="bannerHasChanged" aspect-ratio="2.2" result-size="{w:1280,h:582}"></photo-input>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" style="float:left;" ng-click="discard()">Discard</button>
+                <button class="btn btn-success" ng-click="done()">Save</button>
+                <button class="btn btn-info" ng-show="page > 1" ng-click="back()">&lt;&lt; Back</button>
+                <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+                        ng-click="submitBanner(); next();">
+                    Next &gt;&gt;<span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div ng-switch-when="4">
+        <div class="modal-header"><h3>Include Details</h3></div>
+        <div ng-controller="MizDescriptionCtrl">
+            <div class="modal-body">
+                <photo-input id="description-photo" ng-hide="true" is-editting="true" thumbnail="descriptionPic" has-changed="descriptionPicHasChanged" on-change="editorInsertPicture()" result-size="'selection'"></photo-input>
+                <form name="form" novalidate>
+                    <div style="margin-bottom: 20px">
+                        <p>Include details that are not already in the summary.  Talk about how you came up with the idea for this service, why it's important, and how you are the right person for the job.  You have the option include additional pictures.</p>
+                        <ul>
+                            <li>Will the service be provide at your place or at the person's house, or remotely via internet?</li>
+                            <li>Is this service only available at a certain days?</li>
+                            <li>What is the refund / cancellation policy?  What if you as the organizer needs to cancel?</li>
+                            <li>Is there special payment instructions?</li>
+                            <li>Is there any preparation the guest must do before meeting up?</li>
+                            <li>Is there equipment involved? Who will provide the equipment?</li>
+                        </ul>
+                    </div>
+                    <textarea ui-tinymce="tinyMceOptions" name="description" ng-model="miz.contentBody"></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" style="float:left;" ng-click="discard()">Discard</button>
+                <button class="btn btn-success" ng-click="done()">Save</button>
+                <button class="btn btn-info" ng-show="page > 1" ng-click="back()">&lt;&lt; Back</button>
+                <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+                        ng-click="submit(); next();">
+                    Next &gt;&gt;<span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div ng-switch-when="5">
+        <div class="modal-header"><h3>Create a new service</h3></div>
+        <div class="modal-body">
+            Congratulations! Service is created.  Click done to be redirected to the service page where you can edit the service and activate it.
+        </div>
+        <div class="modal-footer" ng-switch="page">
+            <button class="btn btn-warning" style="float:left;" ng-show="!mizCreated" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-warning" style="float:left;" ng-show="!!mizCreated" ng-click="discard()">Discard</button>
+            <button class="btn btn-success" ng-show="!!mizCreated" ng-click="done()">Save</button>
+            <button class="btn btn-info" ng-show="page > 1" ng-click="back()">&lt;&lt; Back</button>
+            <button class="btn btn-primary" ng-click="done()">
+                Done
+            </button>
+        </div>
+    </div>
+
+</div>
+
+

@@ -1,0 +1,143 @@
+@(model: view.models.MizViewModel)
+@import play.api.templates.Html
+
+@main.main("Meekbiz") {
+
+<script type="text/javascript">
+    window.username = '@model.getUserName';
+    window.mizTitle = '@model.getMizTitle';
+</script>
+@if(!model.isOwner()) {
+    <script type="text/javascript">
+    window.readOnly = true;
+    </script>
+}
+<div class="content" ng-controller="MizCtrl">
+    <div class="container" ng-cloak>
+        <div id="mizBanner" ng-controller="MizBannerCtrl">
+            <div class="form-panel" ng-class="(readOnly ? '' : 'can-edit') + (isEditting ? ' editing' : '')">
+            @if(model.isOwner()) {
+                <photo-input is-editting="isEditting" thumbnail="bannerPic" has-changed="bannerHasChanged" aspect-ratio="2.2" result-size="{w:1280,h:582}"></photo-input>
+            } else {
+                <img src="@model.getMizBannerLink()" />
+            }
+            </div>
+            <div class="form-buttons" ng-class="readOnly ? '' : 'can-edit'">
+                <button class="btn btn-info" ng-click="isEditting = !isEditting;">
+                    <span ng-hide="isEditting">Edit Banner</span>
+                    <span ng-show="isEditting" ng-click="bannerEditCancel()">Cancel</span>
+                </button>
+
+                <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+                ng-show="isEditting" ng-click="submitBanner()">
+                    Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </div>
+        </div>
+        <div id="mizSummary" ng-controller="MizSummaryCtrl">
+            <div class="form-panel" ng-class="(readOnly ? '' : 'can-edit') + (isEditting ? ' editing' : '')">
+                <div style="clear:both"></div>
+                <div style="display:block">
+                    <div style="margin-top:10px">
+                    @if(model.isOwner()) {
+                        <photo-input is-editting="isEditting" thumbnail="thumbnail" has-changed="photoHasChanged" aspect-ratio="1" result-size="140"></photo-input>
+                    } else {
+                        <div style="float:left;margin-right:30px">
+                            <img src="@model.getMizThumbnailLink()" />
+                        </div>
+                    }
+                    </div>
+                </div>
+                <div style="display:block">
+                    <div ng-hide="isEditting">
+                    @if(!model.isOwner) {
+                        <h1>@model.getMizContent().title</h1>
+                        <p>@model.getMizContent().summary</p>
+                    } else {
+                        <div ng-hide="isEditting">
+                            <h1>{{miz.title}}</h1>
+                            <p>{{miz.summary}}</p>
+                        </div>
+                    }
+                    </div>
+                    <div ng-show="isEditting">
+                        <form name="form" novalidate ng-model-options="{ updateOn: 'blur' }">
+                            <div class="form-group" ng-class="{'has-error': form.title.$invalid && titleBlurred}">
+                                <label for="title">Title</label>
+                                <input id="title" name="title" class="form-control" data-ng-model="miz.title"
+                                placeholder="Example: Authentic Italian Cuisine"
+                                ng-blur="titleBlurred=true" ng-focus="titleBlurred=false"
+                                required ng-maxlength="255"
+                                miz-title-not-taken="originalMiz.title"/>
+                                <span class="help-block" ng-show="form.title.$invalid && titleBlurred">
+                                    <span class="help-block-inner" ng-show="form.title.$error.required">
+                                        Title is required</span>
+                                    <span class="help-block-inner" ng-show="form.title.$error.maxlength">
+                                        Title must be less than 255 characters</span>
+                                </span>
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': form.summary.$invalid && descBlurred}">
+                                <label for="summary">Brief Description</label>
+                                <textarea style="resize : none" id="summary" name="summary" class="form-control" ng-model-options="{ updateOn: 'keydown blur'}" data-ng-model="miz.summary"
+                                placeholder="A summary of what you will do as a service."
+                                ng-blur="descBlurred=true" ng-focus="descBlurred=false"
+                                rows="8"
+                                required ng-maxlength="1000">
+                                </textarea>
+                                <p ng-show="!!miz.summary">{{miz.summary.length}} / 1000 characters</p>
+                                <span class="help-block" ng-show="form.summary.$invalid && descBlurred">
+                                    <span class="help-block-inner" ng-show="form.summary.$error.required">
+                                        Description is required</span>
+                                    <span class="help-block-inner" ng-show="form.summary.$error.maxlength">
+                                        Description must be less than 1000 characters</span>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div class="form-buttons" ng-class="readOnly ? '' : 'can-edit'">
+                <button class="btn btn-info" ng-click="isEditting = !isEditting;">
+                    <span ng-hide="isEditting">Edit Summary</span>
+                    <span ng-show="isEditting" ng-click="cancel()">Cancel</span>
+                </button>
+
+                <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+                ng-show="isEditting" ng-click="submit()">
+                    Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </div>
+        </div>
+        <div id="mizDescription" ng-controller="MizDescriptionCtrl">
+            <div class="form-panel" ng-class="(readOnly ? '' : 'can-edit') + (isEditting ? ' editing' : '')">
+                <div ng-hide="isEditting">
+                @if(!model.isOwner()) {
+                    @Html(model.getMizContent().contentBody)
+                } else {
+                    <div ng-bind-html="contentBodyHtml || '--No Description--'"></div>
+                }
+                </div>
+                <photo-input id="description-photo" ng-hide="true" is-editting="isEditting" thumbnail="descriptionPic" has-changed="descriptionPicHasChanged" on-change="editorInsertPicture()" result-size="'selection'"></photo-input>
+                <div ng-show="isEditting">
+                    <form name="form" novalidate>
+                        <textarea ui-tinymce="tinyMceOptions" name="description" ng-model="miz.contentBody"></textarea>
+                    </form>
+                 </div>
+            </div>
+            <div class="form-buttons" ng-class="readOnly ? '' : 'can-edit'">
+                <button class="btn btn-info" ng-click="isEditting = !isEditting;">
+                    <span ng-hide="isEditting">Edit Description</span>
+                    <span ng-show="isEditting" ng-click="cancel()">Cancel</span>
+                </button>
+
+                <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+                ng-show="isEditting" ng-click="submit()">
+                    Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+}

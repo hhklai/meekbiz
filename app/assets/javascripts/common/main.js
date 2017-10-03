@@ -1,0 +1,42 @@
+define(['angular',
+    'angular-sanitize',
+    './services/userService',
+    './services/mizService',
+    './services/s3fileService',
+    './services/managementService',
+    './controllers/mizSummaryController',
+    './controllers/mizBannerController',
+    './filters/uriEncode',
+    './directives/photoInput',
+    './directives/loginButtonDirective',
+    './directives/registerButtonDirective',
+    './directives/createMizButtonDirective',
+    './directives/actionConfirmModal',
+    './directives/forms/validators/emailNotTakenDirective',
+    './directives/forms/validators/nameNotTakenDirective',
+    './directives/forms/validators/mizTitleNotTakenDirective',
+    './thirdpartylibs/tinymce'
+    ],
+function (angular) {
+    'use strict';
+    return angular.module('meekbiz.common', [
+        'ngSanitize',
+        'common.controllers.mizBanner',
+        'common.controllers.mizDescription',
+        'common.controllers.mizSummary',
+        'common.services.user',
+        'common.services.miz',
+        'common.services.s3file',
+        'common.services.management',
+        'common.filters.uriEncode',
+        'common.directives.photoInput',
+        'common.directives.loginButton',
+        'common.directives.registerButton',
+        'common.directives.createMizButton',
+        'common.directives.actionConfirmModal',
+        'common.directives.forms.validators.emailNotTaken',
+        'common.directives.forms.validators.nameNotTaken',
+        'common.directives.forms.validators.mizTitleNotTaken',
+        'common.thirdparty.ui.tinymce'
+    ]);
+});

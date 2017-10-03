@@ -1,0 +1,51 @@
+<div class="modal-header">
+    <h3>Please Sign In</h3>
+</div>
+<div ng-show="error" class="modal-body bg-warning">The user name and password combination is invalid.</div>
+<div class="modal-body">
+    <form name="form" novalidate class="form-horizontal" ng-model-options="{ updateOn: 'blur' }">
+        <div class="form-group" ng-class="{'has-error': form.loginEmail.$invalid && emailBlurred}">
+            <label for="loginEmail" class="col-sm-2 control-label">Login ID</label>
+            <div class="col-sm-6">
+                <input id="loginEmail" name="loginEmail" class="form-control" data-ng-model="login.emailplus"
+                       placeholder="User name or email" ng-blur="emailBlurred=true" ng-focus="emailBlurred=false"
+                       required ng-maxlength="255"/>
+            </div>
+            <div class="col-sm-4 help-block" ng-show="form.loginEmail.$invalid && emailBlurred">
+                <div class="help-block-inner"
+                     ng-show="form.loginEmail.$error.required">Login ID is required</div>
+                <div class="help-block-inner"
+                     ng-show="form.loginEmail.$error.maxlength">Login ID is too long</div>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': form.loginPassword.$invalid && passwordBlurred}">
+            <label for="loginPassword" class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" id="loginPassword" name="loginPassword"
+                       data-ng-model="login.password" ng-blur="passwordBlurred=true"
+                       ng-focus="passwordBlurred=false" required ng-minlength="8"/>
+            </div>
+            <div class="col-sm-4 help-block" ng-show="form.loginPassword.$invalid && passwordBlurred">
+                <div class="help-block-inner">
+                    Password requires at least 8 characters
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <div class="checkbox">
+                    <label> <input type="checkbox" data-ng-model="login.rememberMe"> Remember me
+                    </label>
+                </div>
+            </div>
+        </div>
+        <p>Don't have an account? <a href="" ng-click="cancel()"><register-button>Register now.</register-button></a></p>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="has-spinner btn btn-primary" ng-class="{'active': isLoading}"
+            data-ng-click="form.loginPassword.blur(); form.loginEmail.blur(); form.$invalid ? null :ok(login)">
+        Log In <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+    </button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

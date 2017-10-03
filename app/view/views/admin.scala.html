@@ -1,0 +1,46 @@
+@main.main("Meekbiz") {
+
+    <div class="content" ng-controller="ManagementCtrl">
+	<div class="container">
+        <h2>Server Management</h2>
+        <div ng-cloak>
+            <h3>Reconnect to Search</h3>
+            <span ng-hide="reconnectDone">
+                <button class="has-spinner btn btn-primary" ng-class="{'active': reconnectLoading}" ng-click="reconnectToSearch()">
+                    Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </span>
+            <span ng-show="reconnectDone">
+                <button class="btn btn-success" >Done</button>
+            </span>
+            <span ng-show="reconnectError">Error.</span>
+        </div>
+
+        <div ng-cloak>
+            <h3>Ingest new Mizes to Search Now</h3>
+            <span ng-hide="ingestNowDone">
+                <button class="has-spinner btn btn-primary" ng-class="{'active': ingestNewLoading}" ng-click="ingestNewMizNow()">
+                        Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </span>
+            <span ng-show="ingestNowDone">
+                <button class="btn btn-success">Done</button>
+            </span>
+            <span ng-show="ingestNowError">Error.</span>
+        </div>
+
+        <div ng-cloak>
+            <h3>Delete Search Index and Reingest all</h3>
+            <span ng-hide="reindexDone">
+                <button class="has-spinner btn btn-primary" ng-class="{'active': deleteAllLoading}" ng-click="deleteSearchAndReingestAll()">
+                        Submit <span class="spinner"><i class="icon-spin icon-refresh"></i></span>
+                </button>
+            </span>
+            <span ng-show="reindexDone">
+                <button class="btn btn-success">Done</button>
+            </span>
+            <span ng-show="reindexError">Error.</span>
+        </div>
+	</div>
+</div>
+}
